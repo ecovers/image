@@ -1,0 +1,70 @@
+<html>
+<head>
+<title>창성성장기술개발사업_누빔패턴인식</title>
+</head>
+<div style="float:left;width:60%;background:red;height:50%">실시간 카메라</div>
+<div style="float:right;width:40%;height:50%;overflow:auto">
+	<p style="text-align:center;">제품위치 및 수량 테이블 (제품 이름 제외한 나머지 모두 임시 데이터 )</p>
+	<table border="1" style="text-align:center;margin-left:0.5%;">
+			<th style="width:400px;">제품 이름</th>
+			<th style="width:100px;">제품 번호</th>
+			<th style="width:100px;">위치</th>
+			<th style="width:100px;">수량(개)</th>
+			<th style="width:100px;">규격</th>
+			<th style="width:200px;">제품 등록 시간</th>
+			<?php
+				$servername = "localhost";
+				$username = "ecovers";
+				$password = "1234";
+				$dbname = "test";
+
+				$conn = new mysqli($servername, $username, $password, $dbname);
+
+				$sql = "SELECT * FROM product_admin;";
+				$result = mysqli_query($conn, $sql);
+
+				while ($row = mysqli_fetch_assoc($result)) {
+					$product_name = $row["product_name"];
+					$product_number = $row["product_number"];
+					$product_location = $row["product_location"];
+					$product_ea = $row["product_ea"];
+					$product_size = $row["product_size"];
+					$product_time = $row["data_time"];
+					echo "<tr><td>".$product_name."</td><td>".$product_number."</td><td>".$product_location."</td><td>".$product_ea."</td><td>".$product_size."</td><td>".$product_time."</td>";
+				}
+			?>
+		</tr>
+	</table>
+</div>
+<div style="float:left;width:100%;height:50%;overflow:auto">
+	<p style="text-align:center;">출하내역(제품 이름을 제외한 나머지 임시 데이터)</p>
+		<table border="1" style="text-align:center;margin-left:3.5%;">
+			<th style="width:400px;">제품 이름</th>
+			<th style="width:100px;">규격</th>
+			<th style="width:100px;">단위</th>
+			<th style="width:100px;">출하수량</th>
+			<th style="width:100px;">검사수량</th>
+			<th style="width:100px;">합격수량</th>
+			<th style="width:100px;">합격률</th>
+			<th style="width:800px;">불량내역 및 조치사항</th>
+			<?php
+				$sql = "select b.product_name , b.product_size , b.product_ea , a.shipment_ea , a.check_ea , a.pass_ea , a.pass_rate , a.error_list from shipment_info a join product_admin b on a.product_name = b.product_name;";
+				$result = mysqli_query($conn, $sql);
+
+				while ($row = mysqli_fetch_assoc($result)) {
+					$product_name = $row["product_name"];
+					$product_size = $row["product_size"];
+					$product_ea = $row["product_ea"];
+					$shipment_ea = $row["shipment_ea"];
+					$check_ea = $row["check_ea"];
+					$pass_ea = $row["pass_ea"];
+					$pass_rate = $row["pass_rate"];
+					$error_list = $row["error_list"];
+					echo "<tr><td>".$product_name."</td><td>".$product_size."</td><td>".$product_ea."</td><td>".$shipment_ea."</td><td>".$check_ea."</td><td>".$pass_ea."</td><td>".$pass_rate."</td><td>".$error_list."</td>";
+				}
+				$conn->close();
+			?>
+		</tr>
+	</table>
+</div>
+</html>
